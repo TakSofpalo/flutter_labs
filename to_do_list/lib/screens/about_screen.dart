@@ -47,7 +47,7 @@ class AboutScreen extends StatelessWidget {
               const SizedBox(height: 32),
               // Информация о разработчике
               Text(
-                'Разработано: Nikita',
+                'Разработано: Павлова Софья',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey.shade600,
                     ),
