@@ -1,7 +1,52 @@
 import 'package:flutter/material.dart';
+import '../models/task.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _textController = TextEditingController();
+  final List<Task> _tasks = [
+    Task(id: '1', title: 'Сделать ЛР по Flutter', isCompleted: true),
+    Task(id: '2', title: 'Купить молоко', isCompleted: false),
+    Task(id: '3', title: 'Записаться к врачу', isCompleted: false),
+  ];
+
+  int _idCounter = 4;
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  void _addTask() {
+    final text = _textController.text.trim();
+    if (text.isEmpty) return;
+
+    setState(() {
+      _tasks.add(Task(id: '$_idCounter', title: text));
+      _idCounter++;
+      _textController.clear();
+    });
+  }
+
+  void _toggleTask(int index) {
+    setState(() {
+      final task = _tasks[index];
+      _tasks[index] = task.copyWith(isCompleted: !task.isCompleted);
+    });
+  }
+
+  void _removeTask(String taskId) {
+    setState(() {
+      _tasks.removeWhere((t) => t.id == taskId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +67,12 @@ class HomeScreen extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Иконка погоды
                 Icon(
                   Icons.wb_cloudy,
                   size: 48,
                   color: Colors.blue.shade700,
                 ),
                 const SizedBox(width: 16),
-                // Информация о погоде
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,6 +108,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: _textController,
                     decoration: const InputDecoration(
                       hintText: '+ Новая задача...',
                       border: OutlineInputBorder(),
@@ -73,12 +117,12 @@ class HomeScreen extends StatelessWidget {
                         vertical: 12,
                       ),
                     ),
-                    // Пока без логики обработки ввода
+                    onSubmitted: (_) => _addTask(),
                   ),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                  onPressed: null, // Пока без логики
+                  onPressed: _addTask,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16),
                     shape: const CircleBorder(),
@@ -91,38 +135,36 @@ class HomeScreen extends StatelessWidget {
           const Divider(),
           // Список задач
           Expanded(
-            child: ListView(
-              children: const [
-                // Выполненная задача
-                TaskItem(
-                  title: 'Сделать ЛР по Flutter',
-                  isCompleted: true,
-                ),
-                // Активные задачи
-                TaskItem(
-                  title: 'Купить молоко',
-                  isCompleted: false,
-                ),
-                TaskItem(
-                  title: 'Записаться к врачу',
-                  isCompleted: false,
-                ),
-              ],
+            child: ListView.builder(
+              itemCount: _tasks.length,
+              itemBuilder: (context, index) {
+                final task = _tasks[index];
+                return Dismissible(
+                  key: Key(task.id),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20),
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  confirmDismiss: (direction) async {
+                    return true;
+                  },
+                  onDismissed: (direction) {
+                    _removeTask(task.id);
+                  },
+                  child: TaskItem(
+                    task: task,
+                    onToggle: () => _toggleTask(index),
+                  ),
+                );
+              },
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: null, // Пока без логики
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.checklist),
-            label: 'Задачи',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'О прил.',
           ),
         ],
       ),
@@ -130,33 +172,31 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// Виджет для элемента задачи
 class TaskItem extends StatelessWidget {
-  final String title;
-  final bool isCompleted;
+  final Task task;
+  final VoidCallback onToggle;
 
   const TaskItem({
     super.key,
-    required this.title,
-    required this.isCompleted,
+    required this.task,
+    required this.onToggle,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Checkbox(
-        value: isCompleted,
-        onChanged: null, // Пока без логики
+        value: task.isCompleted,
+        onChanged: (_) => onToggle(),
       ),
       title: Text(
-        title,
+        task.title,
         style: TextStyle(
-          decoration: isCompleted ? TextDecoration.lineThrough : null,
-          color: isCompleted ? Colors.grey : null,
+          decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+          color: task.isCompleted ? Colors.grey : null,
         ),
       ),
-      onTap: null, // Пока без логики
+      onTap: onToggle,
     );
   }
 }
-

@@ -1,17 +1,55 @@
-# to_do_list
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-A new Flutter project.
+В ходе лр4 была созданная структура:
+- lib/main.dart — точка входа с MainApp который отображает HomeScreen
+- lib/screens/home_screen.dart — главный экран с:
+    * AppBar "Мои задачи"
+    * Блоком погоды (город "Москва", температура "+15°C, облачно", "Ощущается как +13°C")
+    * Полем ввода для новой задачи с кнопкой "+"
+    * Списком задач с чекбоксами (выполненные перечеркнуты и серые)
+    * Bottom Navigation Bar с вкладками "Задачи" и "О прил."
+- lib/screens/about_screen.dart — экран "О приложении" с:
+    * AppBar "О приложении"
+    * Иконкой приложения
+    * Названием "To-Do List v1.0"
+    * Описанием приложения
+    * Информацией о разработчике
+    * Bottom Navigation Bar
 
-## Getting Started
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-This project is a starting point for a Flutter application.
+В ходе лр5 было реализовано следующее:
+----------------НАВИГАЦИЯ-----------------
+- BottomNavigationBar
+    * Добавлен MainShell с двумя вкладками: «Задачи» и «О прил.».
+    * Переключение через IndexedStack, состояние сохраняется при смене вкладок.
+    * BottomNavigationBar отображается на обоих экранах.
+- Navigator.push
+    * На экране «О приложении» добавлена кнопка «Подробнее», которая открывает дополнительный экран через Navigator.push.
+---------------ОБРОБОТКА ДЕЙСТВИЙ---------------
+- Добавление задачи
+    * TextEditingController для ввода текста.
+    * Кнопка «+» добавляет новую задачу в список.
+    * onSubmitted — добавление по Enter.
+    * Поле ввода очищается после добавления.
+- Отметка о выполнении
+    * Тап по чекбоксу или строке задачи переключает статус.
+    * Выполненная задача отображается перечёркнутой и серой.
+- Удаление по свайпу
+    * Dismissible: свайп влево показывает красный фон с иконкой корзины.
+    * После полного свайпа задача удаляется.
+---------------БИЗНЕС-ЛОГИКА-------------------
+    * Модель Task с полями id, title, isCompleted.
+    * Список задач хранится в List<Task> (без сохранения после перезапуска).
+    * Методы: _addTask(), _toggleTask(), _removeTask().
 
-A few resources to get you started if this is your first Flutter project:
+----------------СТРУКТУРА ФАЙЛОВ------------------
+lib/
+├── main.dart              # MainApp + MainShell с BottomNavigationBar
+├── models/
+│   └── task.dart          # Модель Task
+└── screens/
+    ├── home_screen.dart   # HomeScreen (StatefulWidget) с логикой задач
+    └── about_screen.dart  # AboutScreen + AboutDetailsScreen
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

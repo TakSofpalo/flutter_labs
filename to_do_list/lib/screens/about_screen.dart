@@ -52,23 +52,45 @@ class AboutScreen extends StatelessWidget {
                       color: Colors.grey.shade600,
                     ),
               ),
+              const SizedBox(height: 24),
+              OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AboutDetailsScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.info_outline),
+                label: const Text('Подробнее'),
+              ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        onTap: null, // Пока без логики
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.checklist),
-            label: 'Задачи',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info),
-            label: 'О прил.',
-          ),
-        ],
+    );
+  }
+}
+
+/// Экран с подробной информацией (демонстрация Navigator.push)
+class AboutDetailsScreen extends StatelessWidget {
+  const AboutDetailsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Подробнее'),
+      ),
+      body: const Padding(
+        padding: EdgeInsets.all(24.0),
+        child: Text(
+          'Приложение To-Do List позволяет управлять задачами, '
+          'отмечать выполненные и удалять ненужные. '
+          'На главном экране отображается погода для выбранного города.',
+          style: TextStyle(fontSize: 16),
+        ),
       ),
     );
   }
