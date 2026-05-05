@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'ui/home/home_screen.dart';
 import 'screens/about_screen.dart';
+import 'ui/home/home_view_model.dart';
+import 'data/repositories/task_repository.dart';
+import 'data/repositories/weather_repository.dart';
+import 'data/services/local_storage_service.dart';
+import 'data/services/weather_service.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,13 +17,31 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Инициализация зависимостей (Dependency Injection)
+    final localStorageService = LocalStorageService();
+    final weatherService = WeatherService();
+    final taskRepository = TaskRepository(localStorageService);
+    final weatherRepository = WeatherRepository(
+      weatherService,
+      localStorageService,
+    );
+    final homeViewModel = HomeViewModel(
+      taskRepository,
+      weatherRepository,
+    );
+
     return MaterialApp(
       title: 'To-Do List',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MainShell(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: homeViewModel),
+        ],
+        child: const MainShell(),
+      ),
     );
   }
 }

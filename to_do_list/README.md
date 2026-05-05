@@ -53,3 +53,29 @@ lib/
     └── about_screen.dart  # AboutScreen + AboutDetailsScreen
 
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+ В ходе лр6 была сделано:
+1. Архитектура по рекомендациям Flutter
+    * UI (View + ViewModel):
+    lib/ui/home/home_screen.dart — экран с погодой, вводом задачи и списком задач.
+    * lib/ui/home/home_view_model.dart — состояние и логика (задачи, погода, вызовы репозиториев).
+    - Data (Repository + Service):
+        * lib/data/services/local_storage_service.dart — сохранение/загрузка задач и выбранного города (shared_preferences).
+        * lib/data/services/weather_service.dart — запросы к погодному API.
+        * lib/data/repositories/task_repository.dart — работа с задачами через LocalStorageService.
+        * lib/data/repositories/weather_repository.dart — погода через WeatherService и сохранённый город.
+    - Domain:
+        * lib/domain/models/task.dart и lib/domain/models/weather.dart — модели с toJson/fromJson для хранения и API.
+2. Локальное хранение (shared_preferences)
+    * Сохранение и загрузка списка задач.
+    * Сохранение и загрузка выбранного города (по умолчанию — Вологда).
+3. Внешний API погоды
+    * Сначала был заложен OpenWeatherMap, затем переход на Weatherstack 1.
+    * В weather_service.dart: запрос к https://api.weatherstack.com/current, разбор ответа (город, температура, ощущается, описание, при необходимости иконка), обработка ошибок и заглушка при сбое.
+4. Отображение в интерфейсе
+    * На главном экране: блок погоды (город, температура, описание, «ощущается как»), кнопка обновления, поле ввода новой задачи, список задач с чекбоксами и смахиванием для удаления.
+    * Состояние через Provider и HomeViewModel; main.dart настроен с MultiProvider и внедрением репозиториев/сервисов.
+5. Город по умолчанию
+    * В local_storage_service.dart город по умолчанию заменён с Москвы на Вологда.
+
+    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

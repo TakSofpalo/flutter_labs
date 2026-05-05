@@ -1,0 +1,5 @@
+{
+    "telemetry.editStats.showStatusBar": false,
+    "terminal.integrated.suggest.showStatusBar": false,
+    "editor.suggest.showStatusBar": false
+}
