@@ -1,6 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ru.flutterlab.todolist">
     <application
-        android:label="to_do_list"
+        android:label="Список задач"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
